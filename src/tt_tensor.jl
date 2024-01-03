@@ -1,4 +1,4 @@
-export tt_tensor
+export tt_tensor, tt_rand
 
 mutable struct tt_tensor
     cores :: CoreCell
@@ -12,4 +12,13 @@ mutable struct tt_tensor
         new(cores)
     end
 
+end
+
+#Create random I[1] × ... × I[N] tensor and TT-rank (R[1], ... , R[N])
+function tt_rand(I :: Vector{<:Integer}, R :: Vector{<:Integer})
+    N = length(I)
+    cores = CoreCell(undef, N)
+    Ranks = [1 ; R ; 1]
+    [cores[n] = randn(Ranks[n], I[n], Ranks[n + 1]) for n = 1 : N]
+    tt_tensor(cores)
 end
